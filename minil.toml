@@ -1,0 +1,4 @@
+name = "Otogiri-Plugin-AutoReconnect"
+# badges = ["travis"]
+module_maker="ModuleBuildTiny"
+
