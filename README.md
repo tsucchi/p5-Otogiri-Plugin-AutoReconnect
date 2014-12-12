@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/tsucchi/p5-Otogiri-Plugin-AutoReconnect.svg?branch=master)](https://travis-ci.org/tsucchi/p5-Otogiri-Plugin-AutoReconnect) [![Coverage Status](https://img.shields.io/coveralls/tsucchi/p5-Otogiri-Plugin-AutoReconnect/master.svg)](https://coveralls.io/r/tsucchi/p5-Otogiri-Plugin-AutoReconnect?branch=master)
 # NAME
 
 Otogiri::Plugin::AutoReconnect - Otogiri plugin automatically reconnect when connection is lost
