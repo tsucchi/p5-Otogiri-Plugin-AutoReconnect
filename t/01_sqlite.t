@@ -6,7 +6,7 @@ use Otogiri::Plugin;
 #use DBIx::QueryLog;
 use File::Temp qw(tempfile);
 
-my ($fh, $dbfile)  = tempfile('db_XXXXX', UNLINK => 1);
+my ($fh, $dbfile)  = tempfile('db_XXXXX', UNLINK => 1, EXLOCK => 0);
 
 my $db = Otogiri->new( connect_info => ["dbi:SQLite:dbname=$dbfile", '', '', { RaiseError => 1, PrintError => 0 }] );
 $db->load_plugin('AutoReconnect');
