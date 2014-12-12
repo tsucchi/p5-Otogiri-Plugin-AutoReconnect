@@ -22,7 +22,6 @@ sub reconnect {
 sub dbh {
     my ($self) = @_;
     my $dbh = $self->{dbh};
-    # TODO: in transaction check
     if ( !$dbh->FETCH('Active') || !$dbh->ping ) {
         $self->reconnect;
     }
