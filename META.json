@@ -55,5 +55,16 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/tsucchi/p5-Otogiri-Plugin-AutoReconnect/issues"
+      },
+      "homepage" : "https://github.com/tsucchi/p5-Otogiri-Plugin-AutoReconnect",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/tsucchi/p5-Otogiri-Plugin-AutoReconnect.git",
+         "web" : "https://github.com/tsucchi/p5-Otogiri-Plugin-AutoReconnect"
+      }
+   },
    "version" : "0.01"
 }
