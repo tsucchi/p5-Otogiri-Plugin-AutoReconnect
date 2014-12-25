@@ -42,5 +42,21 @@ subtest 'auto reconnect', sub {
     ok( defined $row );
 };
 
+subtest 'in transaction', sub {
+
+    my $txn = $db->txn_scope();
+    my $row = $db->single('person', { id => $person_id });
+    $db->dbh->disconnect();
+
+    eval {
+        $db->insert('person', {
+            name => 'Nero Yuzurizaki',
+            age  => 15,
+        });
+    };
+    like( $@, qr/^Detected transaction/ );
+};
+
+
 
 done_testing;

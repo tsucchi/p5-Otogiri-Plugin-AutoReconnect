@@ -4,10 +4,11 @@ use strict;
 use warnings;
 
 use Otogiri::Plugin;
+use Carp qw();
 
 our $VERSION = "0.01";
 
-our @EXPORT = qw(reconnect);
+our @EXPORT = qw(reconnect _in_transaction_check);
 
 BEGIN {
     no warnings 'redefine';
@@ -16,6 +17,12 @@ BEGIN {
 
 sub reconnect {
     my ($self) = @_;
+
+    $self->_in_transaction_check();
+
+    my $dbh = $self->{dbh};
+    $dbh->disconnect();
+
     $self->{dbh} = DBIx::Sunny->connect(@{$self->{connect_info}});
 }
 
@@ -26,6 +33,18 @@ sub dbh {
         $self->reconnect;
     }
     return $self->{dbh};
+}
+
+sub _in_transaction_check {
+    my ($self) = @_;
+
+    return if ( !defined $self->{dbh}->{private_txt_manager} );
+
+    if ( my $info = $self->{dbh}->{private_txt_manager}->in_transaction() ) {
+        my $caller = $info->{caller};
+        my $pid    = $info->{pid};
+        Carp::confess("Detected transaction during a connect operation (last known transaction at $caller->[1] line $caller->[2], pid $pid). Refusing to proceed at");
+    }
 }
 
 1;
