@@ -32,10 +32,7 @@ sub dbh {
     my ($self) = @_;
     my $dbh = $self->{dbh};
 
-    if ( !defined $self->owner_pid ) {
-        $self->owner_pid($$);
-    }
-    if ( $self->owner_pid != $$ ) {
+    if ( !defined $self->owner_pid || $self->owner_pid != $$ ) {
         $self->reconnect;
     }
     if ( !$dbh->FETCH('Active') || !$dbh->ping ) {
