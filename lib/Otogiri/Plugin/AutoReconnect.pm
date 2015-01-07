@@ -4,10 +4,11 @@ use strict;
 use warnings;
 
 use Otogiri::Plugin;
+use Carp qw();
 
 our $VERSION = "0.01";
 
-our @EXPORT = qw(reconnect);
+our @EXPORT = qw(reconnect owner_pid _in_transaction_check);
 
 BEGIN {
     no warnings 'redefine';
@@ -16,16 +17,51 @@ BEGIN {
 
 sub reconnect {
     my ($self) = @_;
-    $self->{dbh} = DBIx::Sunny->connect(@{$self->{connect_info}});
+
+    $self->_in_transaction_check();
+
+    my $dbh = $self->{dbh};
+    $self->{dbh}->disconnect();
+    $self->owner_pid(undef);
+
+    $self->{dbh} = $dbh->clone();
+    $self->owner_pid($$);
 }
 
 sub dbh {
     my ($self) = @_;
     my $dbh = $self->{dbh};
+
+    if ( !defined $self->owner_pid || $self->owner_pid != $$ ) {
+        $self->reconnect;
+    }
     if ( !$dbh->FETCH('Active') || !$dbh->ping ) {
         $self->reconnect;
     }
     return $self->{dbh};
+}
+
+sub owner_pid {
+    my $self = shift;
+
+    if ( @_ ) {
+        $self->{owner_pid} = $_[0];
+    }
+    else {
+        return $self->{owner_pid};
+    }
+}
+
+sub _in_transaction_check {
+    my ($self) = @_;
+
+    return if ( !defined $self->{dbh}->{private_txt_manager} );
+
+    if ( my $info = $self->{dbh}->{private_txt_manager}->in_transaction() ) {
+        my $caller = $info->{caller};
+        my $pid    = $info->{pid};
+        Carp::confess("Detected transaction during a connect operation (last known transaction at $caller->[1] line $caller->[2], pid $pid). Refusing to proceed at");
+    }
 }
 
 1;
@@ -49,6 +85,10 @@ Otogiri::Plugin::AutoReconnect - Otogiri plugin automatically reconnect when con
 
 Otogiri::Plugin::AutoReconnect is connection manager for Otogiri. When this plugin is loaded and database connection is 
 lost, automatically reconnect to database.
+
+=head1 SEE ALSO
+
+L<Teng>, L<DBIx::TransactionManager>, L<DBIx::Connector>
 
 =head1 LICENSE
 

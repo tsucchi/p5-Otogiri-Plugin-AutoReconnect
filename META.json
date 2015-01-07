@@ -42,13 +42,14 @@
       },
       "runtime" : {
          "requires" : {
-            "Otogiri::Plugin" : "0",
+            "Otogiri::Plugin" : "0.03",
             "perl" : "5.008001"
          }
       },
       "test" : {
          "requires" : {
             "DBD::SQLite" : "0",
+            "File::Temp" : "0",
             "Otogiri" : "0",
             "Test::More" : "0.98"
          }

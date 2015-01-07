@@ -16,6 +16,10 @@ Otogiri::Plugin::AutoReconnect - Otogiri plugin automatically reconnect when con
 Otogiri::Plugin::AutoReconnect is connection manager for Otogiri. When this plugin is loaded and database connection is 
 lost, automatically reconnect to database.
 
+# SEE ALSO
+
+[Teng](https://metacpan.org/pod/Teng), [DBIx::TransactionManager](https://metacpan.org/pod/DBIx::TransactionManager), [DBIx::Connector](https://metacpan.org/pod/DBIx::Connector)
+
 # LICENSE
 
 Copyright (C) Takuya Tsuchida.
