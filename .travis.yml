@@ -6,6 +6,7 @@ perl:
   - "5.18"
   - "5.20"
 before_install:
+  - cpanm --force Test::mysqld Test::PostgreSQL
   - cpanm -n Devel::Cover::Report::Coveralls
   - cover -delete 
 script:
