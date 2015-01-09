@@ -5,17 +5,22 @@ use Mock::Quick;
 use Otogiri;
 use Otogiri::Plugin;
 #use DBIx::QueryLog;
-use File::Temp qw(tempfile);
 
-my ($fh, $dbfile)  = tempfile('db_XXXXX', UNLINK => 1, EXLOCK => 0);
+use Test::Requires 'Test::mysqld';
 
-my $db = Otogiri->new( connect_info => ["dbi:SQLite:dbname=$dbfile", '', '', { RaiseError => 1, PrintError => 0 }] );
+my $mysqld = Test::mysqld->new(
+    my_cnf => {
+        'skip-networking' => '',
+    }
+) or plan skip_all => $Test::mysqld::errstr;
+
+my $db = Otogiri->new( connect_info => [$mysqld->dsn(dbname => 'test'), '', ''] );
 $db->load_plugin('AutoReconnect');
 
 
 my $sql = "
 CREATE TABLE person (
-  id   INTEGER PRIMARY KEY AUTOINCREMENT,
+  id   INTEGER PRIMARY KEY AUTO_INCREMENT,
   name TEXT    NOT NULL,
   age  INTEGER NOT NULL DEFAULT 20
 );";
@@ -44,6 +49,7 @@ subtest 'auto reconnect', sub {
 };
 
 subtest 'in transaction', sub {
+
     my $txn = $db->txn_scope();
     my $row = $db->single('person', { id => $person_id });
 
@@ -59,6 +65,7 @@ subtest 'in transaction', sub {
         });
     };
     like( $@, qr/^Detected transaction/ );
+
     $txn->rollback();
 };
 
