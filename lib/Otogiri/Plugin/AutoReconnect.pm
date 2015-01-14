@@ -71,7 +71,7 @@ __END__
 
 =head1 NAME
 
-Otogiri::Plugin::AutoReconnect - Otogiri plugin automatically reconnect when connection is lost
+Otogiri::Plugin::AutoReconnect - (DEPRECATED) Otogiri plugin automatically reconnect when connection is lost
 
 =head1 SYNOPSIS
 
@@ -82,6 +82,8 @@ Otogiri::Plugin::AutoReconnect - Otogiri plugin automatically reconnect when con
     my $row = $db->single('person', { id => $person_id }); # automatically reconnect and connection is fine
 
 =head1 DESCRIPTION
+
+Auto reconnect feature is integrated into L<Otogiri> core from version 0.15. Please DO NOT USE this plugin.
 
 Otogiri::Plugin::AutoReconnect is connection manager for Otogiri. When this plugin is loaded and database connection is 
 lost, automatically reconnect to database.
